@@ -1,0 +1,63 @@
+<div class="container-fluid" ng-controller="HomeCtrl">
+  
+  <h1> All Airports </h1>
+
+  <!-- <div class="well" ng-repeat="airport in airports">
+    <h4> {{ airport.airport_name }} </h4>
+    <p> {{ airport.city }}, {{ airport.country === 'United States' ? airport.state + ', ' + airport.country : airport.country }}</p>
+  </div> -->
+
+  <form>
+    <div class="form-group">
+      <div class="input-group">
+        <div class="input-group-addon"><i class="fa fa-search"></i></div>
+        <input type="text" class="form-control" placeholder="Search Airports" ng-model="searchAirports">
+      </div>      
+    </div>
+  </form>
+    
+  <table class="table table-bordered table-striped"  ng-show="Auth.isLoggedIn()">
+    <thead>
+      <tr>
+        <td>
+          <a href="#" ng-click="sortType = 'airport_name'; sortReverse = !sortReverse">
+            Airport Name 
+            <span ng-show="sortType == 'airport_name' && !sortReverse" class="fa fa-caret-down"></span>
+            <span ng-show="sortType == 'airport_name' && sortReverse" class="fa fa-caret-up"></span>
+          </a>
+        </td>
+        <td>
+          <a href="#" ng-click="sortType = 'airport_code'; sortReverse = !sortReverse">
+          Airport Code 
+            <span ng-show="sortType == 'airport_code' && !sortReverse" class="fa fa-caret-down"></span>
+            <span ng-show="sortType == 'airport_code' && sortReverse" class="fa fa-caret-up"></span>
+          </a>
+        </td>
+        <td>
+          <a href="#" ng-click="sortType = 'city'; sortReverse = !sortReverse">
+          City
+            <span ng-show="sortType == 'city' && !sortReverse" class="fa fa-caret-down"></span>
+            <span ng-show="sortType == 'city' && sortReverse" class="fa fa-caret-up"></span>
+          </a>
+        </td>
+        <td>
+          <a href="#" ng-click="sortType = 'country'; sortReverse = !sortReverse">
+          Country (State)
+            <span ng-show="sortType == 'country' && !sortReverse" class="fa fa-caret-down"></span>
+            <span ng-show="sortType == 'country' && sortReverse" class="fa fa-caret-up"></span>
+          </a>
+        </td>
+      </tr>
+    </thead>
+    
+    <tbody>
+      <tr ng-repeat="airport in airports | orderBy:sortType:sortReverse | filter:searchAirports">
+        <td>{{ airport.airport_name }} {{airport._id}}</td>
+        <td>{{ airport.airport_code }}</td>
+        <td>{{ airport.city }}</td>
+        <td>{{ airport.country === 'United States' ? airport.country + ' (' + airport.state + ')' : airport.country }} </td>
+      </tr>
+    </tbody>
+    
+  </table>
+</div>
