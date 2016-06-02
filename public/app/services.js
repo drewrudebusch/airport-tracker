@@ -3,7 +3,14 @@ angular.module('AirportServices', ['ngResource'])
   return $resource('/api/airports/:id', { id: '@_id' }, {
     query: {isArray: true},
     get: {method: 'GET', cache: false, isArray: false},
+  });
+}])
 
+.factory('User', ['$resource', function($resource) {
+  return $resource('/api/users/:id', { id: '@_id' }, {
+    get: {method: 'GET', cache: false, isArray: false},
+    update: {
+      method: 'PUT', cache: false, isArray: true},
   });
 }])
 

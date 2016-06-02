@@ -14,16 +14,10 @@ angular.module('AirportCtrls', ['AirportServices'])
   $scope.sortReverse  = false;  // set the default sort order
   $scope.searchAirports   = '';     // set the default search/filter term
 
-  $scope.deleteAirport = function(id, airportIdx) {
-    Airport.delete({id: id}, function success(data) {
-      $scope.airports.splice(airportIdx, 1);
-    }, function error(data) {
-      console.log(data);
-    });
-  }
 }])
 
-.controller('ShowCtrl', ['$scope', '$stateParams', 'Airport', function($scope, $stateParams, Airport) {
+.controller('ShowCtrl', ['$scope', '$stateParams', 'Airport', 'Auth', 'User',
+                function($scope, $stateParams, Airport, Auth, User) {
   $scope.airport = {};
 
   Airport.get({id: $stateParams.id}, function success(data) {
@@ -32,6 +26,25 @@ angular.module('AirportCtrls', ['AirportServices'])
   }, function error(data) {
     console.log(data);
   });
+
+  $scope.addAirport = function(airportObject) {
+    $scope.currentUser = Auth.currentUser();
+      console.log('id: ', $scope.currentUser._doc._id);
+      $scope.user = User.get({ id: $scope.currentUser._doc._id }, function() {
+        $scope.user.airports.push(airportObject)
+        console.log('user inside function: ', $scope.user)
+        $scope.user.$update({ id: $scope.user.id }, function() {
+          //updated in the backend
+        });
+      });
+      console.log('user data: ', $scope.user);
+  }
+  
+
+  console.log('current user: ', Auth.currentUser())
+
+
+
 }])
 
 .controller('NewCtrl', ['$scope', '$location', 'Airport', function($scope, $location, Airport) {
