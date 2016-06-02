@@ -1,1 +1,2 @@
-<h1> {{ airport }} </h1>
+<h1> {{ airport.airport_name }} ({{ airport.airport_code }}) </h1>
+{{ airport.city }}, {{ airport.country === 'United States' ? airport.state + ', ' + airport.country : airport.country }}

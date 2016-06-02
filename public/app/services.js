@@ -1,8 +1,8 @@
 angular.module('AirportServices', ['ngResource'])
 .factory('Airport', ['$resource', function($resource) {
-  return $resource('/api/airports/:id', {}, {
+  return $resource('/api/airports/:id', { id: '@_id' }, {
     query: {isArray: true},
-    get: {method: 'GET', cache: false, isArray: true},
+    get: {method: 'GET', cache: false, isArray: false},
 
   });
 }])

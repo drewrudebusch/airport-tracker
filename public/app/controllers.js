@@ -26,7 +26,7 @@ angular.module('AirportCtrls', ['AirportServices'])
 .controller('ShowCtrl', ['$scope', '$stateParams', 'Airport', function($scope, $stateParams, Airport) {
   $scope.airport = {};
 
-  Airport.get({_id: $stateParams.id}, function success(data) {
+  Airport.get({id: $stateParams.id}, function success(data) {
     console.log(data);
     $scope.airport = data;
   }, function error(data) {
