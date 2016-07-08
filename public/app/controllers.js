@@ -1,5 +1,6 @@
 angular.module('AirportCtrls', ['AirportServices'])
-.controller('HomeCtrl', ['$scope', 'Airport', 'Auth', function($scope, Airport, Auth) {
+
+.controller('AirportCtrl', ['$scope', 'Airport', 'Auth', function($scope, Airport, Auth) {
   $scope.Auth = Auth;
   $scope.airports = [];
 
@@ -16,57 +17,76 @@ angular.module('AirportCtrls', ['AirportServices'])
 
 }])
 
+.controller('HomeCtrl', ['$scope', 'Airport', 'Auth', function($scope, Airport, Auth) {
+
+}])
+
 .controller('ShowCtrl', ['$scope', '$stateParams', 'Airport', 'Auth', 'User',
                 function($scope, $stateParams, Airport, Auth, User) {
   $scope.airport = {};
+  $scope.airportVisited = false;
 
   Airport.get({id: $stateParams.id}, function success(data) {
     console.log(data);
-    $scope.airport = data;
+    $scope.airport = {
+      "_id": data._id,
+      "airport_code": data.airport_code,
+      "airport_name": data.airport_name,
+      "city": data.city,
+      "country": data.country,
+      "state": data.state
+    }
   }, function error(data) {
     console.log(data);
   });
 
-  $scope.addAirport = function(airportObject) {
-    $scope.currentUser = Auth.currentUser();
-      console.log('id: ', $scope.currentUser._doc._id);
-      $scope.user = User.get({ id: $scope.currentUser._doc._id }, function() {
-        $scope.user.airports.push(airportObject)
-        console.log('user inside function: ', $scope.user)
-        $scope.user.$update({ id: $scope.user.id }, function() {
-          //updated in the backend
-        });
+  $scope.currentUser = Auth.currentUser();
+  $scope.user = User.get({ id: $scope.currentUser._doc._id }, function(user) {
+        console.log('id: ', $scope.user);
+        $scope.visited = checkAirport($scope.airport, user.airports)
+        console.log('visited: ', $scope.visited)
       });
-      console.log('user data: ', $scope.user);
-  }
   
+  function checkAirport(obj, arr ) {    
+    for (var i = 0; i < arr.length; i++) {
+        if (arr[i]._id === obj._id) {
+            return true;
+        }
+    }
+    return false;
+  }
 
-  console.log('current user: ', Auth.currentUser())
+  $scope.addAirport = function(airportObject) {
+      User.get({ id: $scope.currentUser._doc._id }, function(user) {
+      // console.log(user.airports)
+      // console.log(airportObject)
+      console.log('visited: ', $scope.visited);
 
-
-
-}])
-
-.controller('NewCtrl', ['$scope', '$location', 'Airport', function($scope, $location, Airport) {
-  $scope.airport = {
-    country: '',
-    state: '',
-    city: '',
-    airport_code: '',
-    airport_name: ''
-  };
-  $scope.createAirport = function() {
-    Airport.save($scope.airport, function success(data) {
-      $location.path('/');
-    }, function error(data) {
-      console.log(data);
-    });
+        if ($scope.visited) {
+          console.log('Airport is already in this user list')
+        } else {
+          user.airports.push(airportObject)
+          console.log('user inside function: ', $scope.user)
+          User.update({ id: user.id }, user, function(user) {
+            $scope.user = user
+            console.log('$scope.user: ', $scope.user);
+            $scope.visited = true;
+          });
+        }
+      });
   }
 }])
 
 .controller('NavCtrl', ['$scope', 'Auth', '$location', function($scope, Auth, $location) {
+  $scope.location = $location.path()
+  $scope.isLoggedIn = function() {
+    return Auth.isLoggedIn();
+  }
   console.log('is logged in: ', Auth.isLoggedIn());
   $scope.Auth = Auth;
+  $scope.currentUser = function(){
+    return Auth.currentUser();
+  }
   $scope.logout = function() {
     Auth.removeToken();
     console.log('My token:', Auth.getToken());
@@ -74,25 +94,21 @@ angular.module('AirportCtrls', ['AirportServices'])
   }
 }])
 
-.controller('SignupCtrl', ['$scope', '$http', '$location', 'Auth', function($scope, $http, $location, Auth) {
+.controller('AuthCtrl', ['$scope', '$http', '$location', 'Auth',
+                function($scope, $http, $location, Auth) {
   $scope.user = {
     email: '',
     password: ''
   };
+
   $scope.userSignup = function() {
     $http.post('/api/users', $scope.user).then(function success(res) {
-      $location.path('/');
     }, function error(res) {
       console.log(data);
     });
+    $scope.userLogin();
   }
-}])
 
-.controller('LoginCtrl', ['$scope', '$http', '$location', 'Auth', function($scope, $http, $location, Auth) {
-  $scope.user = {
-    email: '',
-    password: ''
-  };
   $scope.userLogin = function() {
     $http.post('/api/auth', $scope.user).then(function success(res) {
       Auth.saveToken(res.data.token);
@@ -101,4 +117,13 @@ angular.module('AirportCtrls', ['AirportServices'])
       console.log(data);
     });
   }
-}]);
+}])
+
+.controller('ProfileCtrl', ['$scope', '$location', 'Airport', 'Auth', 'User', function($scope, $location, Airport, Auth, User) {
+  $scope.currentUser = Auth.currentUser();
+  $scope.user = User.get({ id: $scope.currentUser._doc._id }, function(user) {
+        console.log('id: ', $scope.user);
+        $scope.myAirports = user.airports
+      });
+}])
+

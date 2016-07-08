@@ -1,0 +1,14 @@
+body {
+  margin: 0;
+}
+body, #homepage {
+  height: 100vh;
+}
+
+#homepage {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  background-image: url("airplane-wing-black-and-white.jpg");
+  background-size: cover;
+}

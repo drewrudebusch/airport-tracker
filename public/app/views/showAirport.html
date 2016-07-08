@@ -1,9 +1,9 @@
 <h1> {{ airport.airport_name }} ({{ airport.airport_code }}) </h1>
 <p>{{ airport.city }}, {{ airport.country === 'United States' ? airport.state + ', ' + airport.country : airport.country }}</p>
 
-<button class="btn btn-primary" ng-click="addAirport( airport )"> Add Airport </button>
+<button class="btn btn-primary" ng-show="!visited" ng-click="addAirport( airport )"> Add Airport </button>
 
-
+<!-- 
 <div id="map"></div>
     <script>
       var map;
@@ -16,3 +16,4 @@
     </script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyADWEF6zmJSgW8K-BCkNxbaYj4jKJc_l3M  
 &callback=initMap"></script>
+ -->

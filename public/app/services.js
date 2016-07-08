@@ -10,7 +10,7 @@ angular.module('AirportServices', ['ngResource'])
   return $resource('/api/users/:id', { id: '@_id' }, {
     get: {method: 'GET', cache: false, isArray: false},
     update: {
-      method: 'PUT', cache: false, isArray: true},
+      method: 'PUT', cache: false, isArray: false},
   });
 }])
 

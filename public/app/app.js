@@ -12,9 +12,14 @@ app.config([
   $urlRouterProvider.otherwise('/404');
 
   $stateProvider
+  .state('airports', {
+    url: '/airports',
+    templateUrl: 'app/views/airports.html',
+    controller: 'AirportCtrl'
+  })
   .state('home', {
     url: '/',
-    templateUrl: 'app/views/airports.html',
+    templateUrl: 'app/views/home.html',
     controller: 'HomeCtrl'
   })
   .state('newAirport', {
@@ -30,12 +35,17 @@ app.config([
   .state('signup', {
     url: '/signup',
     templateUrl: 'app/views/userSignup.html',
-    controller: 'SignupCtrl'
+    controller: 'AuthCtrl'
   })
   .state('login', {
     url: '/login',
     templateUrl: 'app/views/userLogin.html',
-    controller: 'LoginCtrl'
+    controller: 'AuthCtrl'
+  })
+  .state('user', {
+    url: '/myairports',
+    templateUrl: 'app/views/showUser.html',
+    controller: 'ProfileCtrl'
   })
   .state('404', {
     url: '/404',

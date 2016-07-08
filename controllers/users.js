@@ -22,5 +22,20 @@ router.get('/:id', function(req, res) {
     res.send(user);
   });
 });
+router.put('/:id', function(req, res) {
+  User.findById(req.params.id, function(err, user) {
+    if (err) {
+      return res.status(500).send(err);
+    } else {
+      user.airports = req.body.airports
+      user.save(function err(msg, user, count) {
+        console.log("save error:", msg)
+        console.log(user)
+         res.send(user);
+      });
+    }
+   
+  });
+});
 
 module.exports = router;
